@@ -33,7 +33,7 @@
         }
 
         .emoji {
-            font-size: 84px;
+            font-size: 96px;
             margin-bottom: 48px;
             animation: pulse 2s infinite ease-in-out;
         }
@@ -125,29 +125,32 @@
         function goHome() {
             window.location.href = "/";
         }
+            {{#errorCode}}
+            function copyErrorCode() {
+                const codeElement = document.getElementById("error-code");
+                const originalText = "{{errorCode}}";
 
-        function copyErrorCode() {
-            const codeElement = document.getElementById("error-code");
-            const originalText = "{{errorCode}}";
+                const code = originalText.replace("错误码：", "").trim();
+                navigator.clipboard.writeText(code).then(() => {
+                    codeElement.innerText = "已复制错误码 ✅";
+                    codeElement.classList.add("copied");
 
-            const code = originalText.replace("错误码：", "").trim();
-            navigator.clipboard.writeText(code).then(() => {
-                codeElement.innerText = "已复制错误码 ✅";
-                codeElement.classList.add("copied");
-
-                setTimeout(() => {
-                    codeElement.innerText = originalText;
-                    codeElement.classList.remove("copied");
-                }, 1500);
-            });
-        }
+                    setTimeout(() => {
+                        codeElement.innerText = originalText;
+                        codeElement.classList.remove("copied");
+                    }, 1500);
+                });
+            }
+            {{/errorCode}}
     </script>
 </head>
 <body onload="randomEmoji()">
 <div class="card">
     <div class="emoji" id="emoji">😞</div>
     <div class="message">{{errorMessage}}</div>
-    <div class="error-code" id="error-code" onclick="copyErrorCode()">错误码：{{errorCode}}</div>
+    {{#errorCode}}
+        <div class="error-code" id="error-code" onclick="copyErrorCode()">错误码：{{errorCode}}</div>
+    {{/errorCode}}
     <div class="buttons">
         <button class="btn" onclick="goBack()">返回上一页</button>
         <button class="btn" onclick="goHome()">返回首页</button>
